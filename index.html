@@ -12,7 +12,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="Nexus Invoicing" />
 
-  <link rel="stylesheet" href="styles-mobile.css?v=20260402-1200" />
+  <link rel="stylesheet" href="styles-mobile.css?v=20260403-1200" />
 
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.2/dist/jspdf.plugin.autotable.min.js"></script>
@@ -197,6 +197,29 @@
           </div>
         </section>
 
+        <section class="mobileSectionCard">
+          <div class="sectionMiniHead">
+            <div>
+              <div class="sectionMiniTitle">Pago</div>
+              <div class="heroHint">Acceso rápido para el cliente</div>
+            </div>
+          </div>
+
+          <div class="stackFields">
+            <div class="field">
+              <label>Texto visible</label>
+              <input class="input" id="paymentLabelPreview" placeholder="Pagar factura" readonly />
+            </div>
+
+            <div class="field">
+              <label>Enlace</label>
+              <input class="input" id="paymentLinkPreview" placeholder="https://..." readonly />
+            </div>
+
+            <button class="btn primary" id="btnOpenPaymentLink" type="button">Abrir botón de pago</button>
+          </div>
+        </section>
+
         <section class="mobileActionBar">
           <button class="btn ghost flex1" id="btnSaveDoc" type="button">Guardar</button>
           <button class="btn ghost" id="btnDuplicate" type="button">Duplicar</button>
@@ -262,7 +285,7 @@
             <div class="sectionMiniTitle">Empresa</div>
             <button class="btn primary smallBtn" id="btnOpenConfig" type="button">Abrir</button>
           </div>
-          <div class="hint">Aquí configuras branding, IVU y logo.</div>
+          <div class="hint">Aquí configuras branding, IVU, logo y catálogo.</div>
         </section>
 
         <section class="mobileSectionCard">
@@ -289,22 +312,6 @@
         </section>
       </section>
 
-      <section class="view" id="view-preview">
-        <section class="mobileSectionCard previewCard">
-          <div class="sectionMiniHead">
-            <div class="sectionMiniTitle">Preview</div>
-            <div class="rowBtns">
-              <button class="btn ghost smallBtn" id="btnRefreshPreview" type="button">Refrescar</button>
-              <button class="btn primary smallBtn" id="btnConfirmFromPreview" type="button">PDF</button>
-            </div>
-          </div>
-
-          <div class="previewBox mobilePreviewBox">
-            <iframe id="pdfFrame" title="PDF Preview"></iframe>
-          </div>
-        </section>
-      </section>
-
     </main>
 
     <nav class="bottomNav" id="mainTabs">
@@ -320,8 +327,8 @@
     <div class="modalCard mobileModalCard">
       <div class="modalHead">
         <div>
-          <div class="modalTitle">Empresa</div>
-          <div class="modalHint">Configuración principal</div>
+          <div class="modalTitle">Empresa y Catálogo</div>
+          <div class="modalHint">Configuración principal y automatización de servicios</div>
         </div>
         <button class="btn ghost" id="btnCloseBiz" type="button">Cerrar</button>
       </div>
@@ -350,7 +357,7 @@
 
           <div class="field">
             <label>Texto enlace de pago</label>
-            <input class="input" id="bizPaymentLabel" placeholder="Pagar ahora" />
+            <input class="input" id="bizPaymentLabel" placeholder="Pagar factura" />
           </div>
 
           <div class="field">
@@ -367,13 +374,66 @@
             <label>IVU %</label>
             <input class="input" id="taxRate" type="number" step="0.01" placeholder="11.5" />
           </div>
-
-          <button class="btn primary" id="btnSaveBiz" type="button">Guardar</button>
         </div>
+
+        <section class="mobileSectionCard" style="margin-top:16px;">
+          <div class="sectionMiniHead">
+            <div class="sectionMiniTitle">Nueva categoría</div>
+          </div>
+          <div class="stackFields">
+            <div class="field">
+              <label>Nombre de categoría</label>
+              <input class="input" id="newCategoryName" placeholder="Ej. Diagnóstico, Mantenimiento, Reparación" />
+            </div>
+            <button class="btn primary" id="btnAddCategory" type="button">Añadir categoría</button>
+          </div>
+        </section>
+
+        <section class="mobileSectionCard" style="margin-top:16px;">
+          <div class="sectionMiniHead">
+            <div class="sectionMiniTitle">Nuevo servicio</div>
+          </div>
+          <div class="stackFields">
+            <div class="field">
+              <label>Categoría</label>
+              <select class="input" id="serviceCategorySelect"></select>
+            </div>
+            <div class="field">
+              <label>Nombre del servicio</label>
+              <input class="input" id="newServiceName" placeholder="Ej. Mantenimiento preventivo" />
+            </div>
+            <div class="field">
+              <label>Descripción para factura</label>
+              <input class="input" id="newServiceDesc" placeholder="Texto que se colocará en el item" />
+            </div>
+            <div class="field">
+              <label>Precio</label>
+              <input class="input" id="newServicePrice" type="number" step="0.01" placeholder="0.00" />
+            </div>
+            <div class="field">
+              <label>Notas automáticas</label>
+              <textarea class="input" id="newServiceNotes" rows="3" placeholder="Garantías, observaciones, etc."></textarea>
+            </div>
+            <div class="field">
+              <label>Condiciones automáticas</label>
+              <textarea class="input" id="newServiceTerms" rows="3" placeholder="Pago, términos, restricciones..."></textarea>
+            </div>
+            <button class="btn primary" id="btnAddService" type="button">Añadir servicio</button>
+          </div>
+        </section>
+
+        <section class="mobileSectionCard" style="margin-top:16px;">
+          <div class="sectionMiniHead">
+            <div class="sectionMiniTitle">Catálogo actual</div>
+          </div>
+          <div id="catalogAdminBody" class="mobileListCards"></div>
+        </section>
+
+        <button class="btn primary" id="btnSaveBiz" type="button" style="margin-top:16px;">Guardar todo</button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="app-mobile.js?v=20260402-1200"></script>
+  <script type="module" src="app-mobile.js?v=20260403-1200"></script>
 </body>
 </html>
